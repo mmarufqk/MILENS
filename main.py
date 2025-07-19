@@ -10,7 +10,8 @@ from vosk import Model, KaldiRecognizer
 
 # konfig
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_FOLDER_NAME = os.path.join("Vosk", "vosk-model-en-us-0.22")
+# MODEL_FOLDER_NAME = os.path.join("Vosk", "vosk-model-en-us-0.22") # kalo pgn 22 un comment ini 
+MODEL_FOLDER_NAME = os.path.join("Vosk", "vosk-model-small-en-us-0.15") # kalo pgn 15 un comment ini
 model_path = os.path.join(BASE_DIR, MODEL_FOLDER_NAME)
 
 # Load model Vosk
