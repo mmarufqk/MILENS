@@ -8,9 +8,10 @@ import threading
 from vosk import Model, KaldiRecognizer
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_FOLDER_NAME = "vosk-model-en-us-0.22"
+MODEL_FOLDER_NAME = os.path.join("Vosk", "vosk-model-en-us-0.22") 
 model_path = os.path.join(BASE_DIR, MODEL_FOLDER_NAME)
 
+# Load model Vosk
 try:
     model = Model(model_path)
 except Exception as e:
@@ -25,7 +26,7 @@ keluar_program = False
 transkripsi_aktif = False
 
 def transkripsi():
-    global stream, keluar_program
+    global stream, keluar_program, transkripsi_aktif
     print("Transkripsi dimulai. Tekan 'Q' untuk keluar.")
 
     try:
@@ -56,23 +57,30 @@ def transkripsi():
             stream.stop_stream()
             stream.close()
         p.terminate()
+        transkripsi_aktif = False
 
 def mulai_transkripsi():
     global transkripsi_aktif
     if not transkripsi_aktif:
         transkripsi_aktif = True
         threading.Thread(target=transkripsi, daemon=True).start()
+    else:
+        print("Transkripsi sudah berjalan.")
 
 def keluar():
     global keluar_program
     keluar_program = True
-    print("Keluar dari program.")
+    print("Keluar dari program...")
 
+# Hotkey
 keyboard.add_hotkey('s', mulai_transkripsi)
 keyboard.add_hotkey('q', keluar)
 
 print("Tekan 'S' untuk mulai transkripsi.")
 print("Tekan 'Q' untuk keluar dari program.")
 
-while not keluar_program:
-    time.sleep(0.1)
+try:
+    while not keluar_program:
+        time.sleep(0.1)
+except KeyboardInterrupt:
+    keluar()
