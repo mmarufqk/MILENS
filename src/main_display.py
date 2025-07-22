@@ -7,3 +7,4 @@ if __name__ == "__main__":
         text = read_from_file()
         display_text_overlay(text)
         time.sleep(1) 
+
