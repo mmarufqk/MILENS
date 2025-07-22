@@ -25,11 +25,11 @@ def get_audio_stream():
                     frames_per_buffer=8192)
     return stream, p
 
-def write_to_file(text, path="output.txt"):
+def write_to_file(text, path="../output/results.txt"):
     with open(path, "w") as f:
         f.write(text)
 
-def read_from_file(path="output.txt"):
+def read_from_file(path="../output/results.txt"):
     try:
         with open(path, "r") as f:
             return f.read()
