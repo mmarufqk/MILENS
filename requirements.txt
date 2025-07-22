@@ -1,3 +1,7 @@
 vosk
 opencv-python
 pyaudio
+pydub
+jiwer
+pandas
+ffmpeg-python
