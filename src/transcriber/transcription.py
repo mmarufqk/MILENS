@@ -5,7 +5,7 @@ from vosk import Model, KaldiRecognizer
 from transcriber.audio_stream import get_audio_stream
 from utils.file_io import write_to_file
 
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "../../models/vosk-model-small-en-us-0.15")
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "../../models/vosk-model-en-us-0.22")
 model = Model(MODEL_PATH)
 rec = KaldiRecognizer(model, 16000)
 
