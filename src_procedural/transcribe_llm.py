@@ -2,9 +2,11 @@ import os
 import json
 import threading
 import time
+import wave
 import cv2
 import pyaudio
 from vosk import Model, KaldiRecognizer
+from llm_corrector import correct_text
 
 # Path ke model Vosk
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "../models/vosk-model-en-us-0.22")
@@ -30,7 +32,7 @@ def get_audio_stream():
     return stream, p
 
 def write_to_file(text, path=OUTPUT_PATH):
-    os.makedirs(os.path.dirname(path), exist_ok=True)  # Pastikan folder ada
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
         f.write(text)
 
@@ -52,9 +54,10 @@ def _transcribe():
             result = json.loads(rec.Result())
             text = result.get("text", "")
             if text:
-                print("[TRANSKRIP]:", text)
-                latest_text = text
-                write_to_file(text)
+                corrected = correct_text(text)
+                print("[TRANSKRIP]:", corrected)
+                latest_text = corrected
+                write_to_file(corrected)
 
     stream.stop_stream()
     stream.close()
@@ -133,6 +136,26 @@ def display_text_overlay(text):
 
     cap.release()
     cv2.destroyAllWindows()
+
+def transcribe_audio_file(wav_file):
+    wf = wave.open(wav_file, "rb")
+    file_rec = KaldiRecognizer(model, wf.getframerate())
+    file_rec.SetWords(True)
+    results = []
+
+    while True:
+        data = wf.readframes(4000)
+        if len(data) == 0:
+            break
+        if file_rec.AcceptWaveform(data):
+            results.append(json.loads(file_rec.Result()))
+    results.append(json.loads(file_rec.FinalResult()))
+
+    text = " ".join([res.get("text", "") for res in results])
+    corrected = correct_text(text)
+    return corrected
+
+
 
 if __name__ == "__main__":
     start_camera_display(start_transcription, stop_transcription)
