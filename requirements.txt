@@ -5,4 +5,4 @@ pydub
 jiwer
 pandas
 ffmpeg-python
-llama-cpp-python
+llama-cpp-python==0.2.72
