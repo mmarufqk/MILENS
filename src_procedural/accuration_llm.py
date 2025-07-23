@@ -3,35 +3,49 @@ import wave
 import json
 import pandas as pd
 from pydub import AudioSegment
-from jiwer import wer
 from vosk import Model, KaldiRecognizer
-from llm_corrector import correct_text
+from jiwer import wer, Compose, ToLowerCase, RemovePunctuation, RemoveMultipleSpaces, RemoveWhiteSpace, ExpandCommonEnglishContractions
 
-# Path konfigurasi
+# === Path Konfigurasi ===
 BASE_DIR = os.path.dirname(__file__)
 MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-en-us-0.22")
 DATASET_PATH = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/clips")
 TSV_FILE = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/validated.tsv")
-OUTPUT_CSV = os.path.join(BASE_DIR, "../output/commonvoice_results_llm.csv")
+OUTPUT_CSV = os.path.join(BASE_DIR, "../output/commonvoice_results_raw_only.csv")
 
-# Load model Vosk
+# === Inisialisasi Model Vosk ===
 if not os.path.exists(MODEL_PATH):
     raise FileNotFoundError(f"Model path tidak ditemukan: {MODEL_PATH}")
 model = Model(MODEL_PATH)
 
-def mp3_to_wav(mp3_file, wav_file):
-    """Convert MP3 to WAV mono 16kHz"""
-    try:
-        sound = AudioSegment.from_mp3(mp3_file)
-        sound = sound.set_channels(1).set_frame_rate(16000)
-        sound.export(wav_file, format="wav")
-    except Exception as e:
-        print(f"[ERROR] Gagal mengonversi {mp3_file} ke WAV: {e}")
+# === Normalisasi Jiwer untuk WER ===
+transform = Compose([
+    ToLowerCase(),
+    RemovePunctuation(),
+    RemoveMultipleSpaces(),
+    RemoveWhiteSpace(replace_by_space=True),
+    ExpandCommonEnglishContractions()
+])
 
-def transcribe_audio(wav_file):
-    """Transkripsi audio WAV menggunakan Vosk"""
+def normalize_text(text: str) -> str:
+    return transform(text)
+
+def compute_normalized_wer(ref: str, hyp: str) -> float:
+    return wer(normalize_text(ref), normalize_text(hyp))
+
+# === Konversi MP3 ke WAV (Mono 16kHz) ===
+def mp3_to_wav(mp3_path: str, wav_path: str):
     try:
-        wf = wave.open(wav_file, "rb")
+        sound = AudioSegment.from_mp3(mp3_path)
+        sound = sound.set_channels(1).set_frame_rate(16000)
+        sound.export(wav_path, format="wav")
+    except Exception as e:
+        print(f"[ERROR] Gagal mengonversi {mp3_path}: {e}")
+
+# === Transkripsi Audio dengan Vosk ===
+def transcribe_audio(wav_path: str) -> str:
+    try:
+        wf = wave.open(wav_path, "rb")
         rec = KaldiRecognizer(model, wf.getframerate())
         rec.SetWords(True)
 
@@ -43,74 +57,72 @@ def transcribe_audio(wav_file):
             if rec.AcceptWaveform(data):
                 results.append(json.loads(rec.Result()))
         results.append(json.loads(rec.FinalResult()))
-
-        return " ".join([res.get("text", "") for res in results])
+        return " ".join(res.get("text", "") for res in results)
     except Exception as e:
-        print(f"[ERROR] Gagal transkripsi {wav_file}: {e}")
+        print(f"[ERROR] Gagal transkripsi {wav_path}: {e}")
         return ""
 
+# === Fungsi Utama ===
 def main():
     if not os.path.exists(TSV_FILE):
         raise FileNotFoundError("File TSV tidak ditemukan.")
 
     df = pd.read_csv(TSV_FILE, sep="\t")
 
-    # Filter hanya kalimat dengan 3 kata atau lebih
+    # Filter kalimat pendek (< 3 kata)
     df["sentence_len"] = df["sentence"].apply(lambda x: len(str(x).split()))
     df = df[df["sentence_len"] >= 3]
 
-    # Ambil 20 sampel acak
+    # Ambil sampel acak
     sample_df = df.sample(20, random_state=42)
 
     results = []
     total_wer = []
 
     for _, row in sample_df.iterrows():
-        mp3_path = os.path.join(DATASET_PATH, row["path"])
-        wav_path = mp3_path.replace(".mp3", ".wav")
+        mp3_file = os.path.join(DATASET_PATH, row["path"])
+        wav_file = mp3_file.replace(".mp3", ".wav")
 
-        if not os.path.exists(mp3_path):
-            print(f"[WARNING] File audio tidak ditemukan: {mp3_path}")
+        if not os.path.exists(mp3_file):
+            print(f"[WARNING] File audio tidak ditemukan: {mp3_file}")
             continue
 
-        mp3_to_wav(mp3_path, wav_path)
+        mp3_to_wav(mp3_file, wav_file)
 
-        reference = str(row["sentence"]).strip().lower()
-        raw_prediction = transcribe_audio(wav_path).strip().lower()
-        fixed_prediction = correct_text(raw_prediction).strip().lower()
+        reference = str(row["sentence"]).strip()
+        raw_prediction = transcribe_audio(wav_file).strip()
 
-        if not fixed_prediction:
-            print(f"[INFO] Empty fixed prediction for: {row['path']}")
-            fixed_prediction = raw_prediction 
+        if not raw_prediction:
+            print(f"[INFO] Transkripsi kosong: {row['path']}")
+            continue
 
-        error_rate = wer(reference, fixed_prediction)
+        error_rate = compute_normalized_wer(reference, raw_prediction)
         total_wer.append(error_rate)
 
         results.append({
             "Audio": row["path"],
             "Reference": reference,
             "Raw Prediction": raw_prediction,
-            "Fixed Prediction": fixed_prediction,
             "WER (%)": round(error_rate * 100, 2)
         })
 
         print(f"Audio : {row['path']}")
         print(f"Ref   : {reference}")
         print(f"Hyp   : {raw_prediction}")
-        print(f"Fix   : {fixed_prediction}")
         print(f"WER   : {error_rate * 100:.2f}%\n")
 
-    # Simpan hasil ke CSV
+    # Simpan ke CSV
     os.makedirs(os.path.dirname(OUTPUT_CSV), exist_ok=True)
     pd.DataFrame(results).to_csv(OUTPUT_CSV, index=False)
 
     # Rata-rata WER
     if total_wer:
         avg_wer = sum(total_wer) / len(total_wer)
-        print(f"Rata-rata WER (LLM corrected): {avg_wer:.2f}%")
+        print(f"Rata-rata WER: {avg_wer * 100:.2f}%")
     else:
-        print("Tidak ada data yang berhasil dihitung WER-nya.")
-    print(f"Hasil lengkap disimpan di: {OUTPUT_CSV}")
+        print("Tidak ada data berhasil dihitung.")
+    print(f"Hasil disimpan di: {OUTPUT_CSV}")
 
+# === Jalankan ===
 if __name__ == "__main__":
     main()

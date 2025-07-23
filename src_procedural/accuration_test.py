@@ -6,7 +6,6 @@ from pydub import AudioSegment
 from jiwer import wer
 from vosk import Model, KaldiRecognizer
 
-# Konstanta path
 BASE_DIR = os.path.dirname(__file__)
 MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-en-us-0.22")
 DATASET_PATH = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/clips")
@@ -14,10 +13,8 @@ TSV_FILE = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/
 OUTPUT_CSV = os.path.join(BASE_DIR, "../output/commonvoice_results.csv")
 TEMP_DIR = os.path.join(BASE_DIR, "temp_wavs")
 
-# Pastikan folder sementara ada
 os.makedirs(TEMP_DIR, exist_ok=True)
 
-# Load model Vosk
 model = Model(MODEL_PATH)
 
 def mp3_to_wav(mp3_file, wav_file):
@@ -50,18 +47,15 @@ def transcribe_audio(wav_file):
         print(f"[ERROR] Gagal mentranskripsi {wav_file}: {e}")
         return ""
 
-# Pastikan file TSV tersedia
 if not os.path.exists(TSV_FILE):
     raise FileNotFoundError(f"TSV file tidak ditemukan: {TSV_FILE}")
 
-# Ambil 20 sampel acak dari dataset
 df = pd.read_csv(TSV_FILE, sep="\t")
 sample_df = df.sample(20, random_state=42)
 
 total_wer = []
 results = []
 
-# Proses tiap data
 for idx, row in sample_df.iterrows():
     mp3_path = os.path.join(DATASET_PATH, row["path"])
     wav_path = os.path.join(TEMP_DIR, row["path"].replace(".mp3", ".wav"))
@@ -95,21 +89,18 @@ for idx, row in sample_df.iterrows():
     print(f"Hyp:   {hyp_text}")
     print(f"WER:   {error * 100:.2f}%\n")
 
-# Simpan hasil ke CSV
 results_df = pd.DataFrame(results)
 os.makedirs(os.path.dirname(OUTPUT_CSV), exist_ok=True)
 results_df.to_csv(OUTPUT_CSV, index=False)
 
-# Hitung rata-rata WER
 if total_wer:
-    avg_wer = sum(total_wer) / len(total_wer) * 100
+    avg_wer = sum(total_wer) / len(total_wer)
     print(f"Rata-rata WER: {avg_wer:.2f}%")
 else:
     print("Tidak ada hasil valid untuk dihitung WER.")
 
 print(f"Hasil lengkap disimpan di: {OUTPUT_CSV}")
 
-# Hapus file WAV sementara
 for file in os.listdir(TEMP_DIR):
     if file.endswith(".wav"):
         os.remove(os.path.join(TEMP_DIR, file))
