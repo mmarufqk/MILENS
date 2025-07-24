@@ -1,19 +1,16 @@
 import os
 import json
 import threading
-import time
 import wave
 import cv2
 import pyaudio
 from vosk import Model, KaldiRecognizer
 from llm_corrector import correct_text
 
-# Path ke model Vosk
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "../models/vosk-model-en-us-0.22")
 model = Model(MODEL_PATH)
 rec = KaldiRecognizer(model, 16000)
 
-# Variabel global
 stream, p = None, None
 is_running = False
 latest_text = ""
@@ -154,8 +151,6 @@ def transcribe_audio_file(wav_file):
     text = " ".join([res.get("text", "") for res in results])
     corrected = correct_text(text)
     return corrected
-
-
 
 if __name__ == "__main__":
     start_camera_display(start_transcription, stop_transcription)

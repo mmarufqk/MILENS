@@ -1,4 +1,3 @@
-
 import time
 import os
 import cv2
@@ -29,9 +28,13 @@ def display_text_overlay(text):
         ret, frame = cap.read()
         if not ret:
             break
+        
+        # cv2.putText(frame, "S: Start  T: Stop  Q: Quit", (10, frame.shape[0]-10),
+        #             cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1)
         cv2.putText(frame, text, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 
                     1, (0, 255, 0), 2, cv2.LINE_AA)
         cv2.imshow('Text Overlay', frame)
+        
         key = cv2.waitKey(1) & 0xFF
         if key != 255:
             if chr(key).lower() == 'q':

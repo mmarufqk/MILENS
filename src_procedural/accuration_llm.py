@@ -6,19 +6,16 @@ from pydub import AudioSegment
 from vosk import Model, KaldiRecognizer
 from jiwer import wer, Compose, ToLowerCase, RemovePunctuation, RemoveMultipleSpaces, RemoveWhiteSpace, ExpandCommonEnglishContractions
 
-# === Path Konfigurasi ===
 BASE_DIR = os.path.dirname(__file__)
 MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-en-us-0.22")
 DATASET_PATH = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/clips")
 TSV_FILE = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/validated.tsv")
 OUTPUT_CSV = os.path.join(BASE_DIR, "../output/commonvoice_results_raw_only.csv")
 
-# === Inisialisasi Model Vosk ===
 if not os.path.exists(MODEL_PATH):
     raise FileNotFoundError(f"Model path tidak ditemukan: {MODEL_PATH}")
 model = Model(MODEL_PATH)
 
-# === Normalisasi Jiwer untuk WER ===
 transform = Compose([
     ToLowerCase(),
     RemovePunctuation(),
@@ -33,7 +30,6 @@ def normalize_text(text: str) -> str:
 def compute_normalized_wer(ref: str, hyp: str) -> float:
     return wer(normalize_text(ref), normalize_text(hyp))
 
-# === Konversi MP3 ke WAV (Mono 16kHz) ===
 def mp3_to_wav(mp3_path: str, wav_path: str):
     try:
         sound = AudioSegment.from_mp3(mp3_path)
@@ -42,7 +38,6 @@ def mp3_to_wav(mp3_path: str, wav_path: str):
     except Exception as e:
         print(f"[ERROR] Gagal mengonversi {mp3_path}: {e}")
 
-# === Transkripsi Audio dengan Vosk ===
 def transcribe_audio(wav_path: str) -> str:
     try:
         wf = wave.open(wav_path, "rb")
@@ -62,18 +57,15 @@ def transcribe_audio(wav_path: str) -> str:
         print(f"[ERROR] Gagal transkripsi {wav_path}: {e}")
         return ""
 
-# === Fungsi Utama ===
 def main():
     if not os.path.exists(TSV_FILE):
         raise FileNotFoundError("File TSV tidak ditemukan.")
 
     df = pd.read_csv(TSV_FILE, sep="\t")
 
-    # Filter kalimat pendek (< 3 kata)
     df["sentence_len"] = df["sentence"].apply(lambda x: len(str(x).split()))
     df = df[df["sentence_len"] >= 3]
 
-    # Ambil sampel acak
     sample_df = df.sample(20, random_state=42)
 
     results = []
@@ -111,11 +103,9 @@ def main():
         print(f"Hyp   : {raw_prediction}")
         print(f"WER   : {error_rate * 100:.2f}%\n")
 
-    # Simpan ke CSV
     os.makedirs(os.path.dirname(OUTPUT_CSV), exist_ok=True)
     pd.DataFrame(results).to_csv(OUTPUT_CSV, index=False)
 
-    # Rata-rata WER
     if total_wer:
         avg_wer = sum(total_wer) / len(total_wer)
         print(f"Rata-rata WER: {avg_wer * 100:.2f}%")
@@ -123,6 +113,5 @@ def main():
         print("Tidak ada data berhasil dihitung.")
     print(f"Hasil disimpan di: {OUTPUT_CSV}")
 
-# === Jalankan ===
 if __name__ == "__main__":
     main()

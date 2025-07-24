@@ -95,7 +95,7 @@ results_df.to_csv(OUTPUT_CSV, index=False)
 
 if total_wer:
     avg_wer = sum(total_wer) / len(total_wer)
-    print(f"Rata-rata WER: {avg_wer:.2f}%")
+    print(f"Rata-rata WER: {avg_wer * 100:.2f}%")
 else:
     print("Tidak ada hasil valid untuk dihitung WER.")
 
