@@ -104,7 +104,7 @@ def main():
 
         print(f"Audio : {row['path']}")
         print(f"Ref   : {reference}")
-        print(f"Hyp   : {raw_prediction}")
+        print(f"Hyp   : {fixed_prediction}")
         print(f"WER   : {error_rate * 100:.2f}%\n")
 
     os.makedirs(os.path.dirname(OUTPUT_CSV), exist_ok=True)
