@@ -4,7 +4,9 @@ import json
 import pandas as pd
 from pydub import AudioSegment
 from vosk import Model, KaldiRecognizer
+from llm_corrector_tinyllama import correct_text
 from jiwer import wer, Compose, ToLowerCase, RemovePunctuation, RemoveMultipleSpaces, RemoveWhiteSpace, ExpandCommonEnglishContractions
+
 
 BASE_DIR = os.path.dirname(__file__)
 MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-en-us-0.22")
@@ -91,10 +93,12 @@ def main():
         error_rate = compute_normalized_wer(reference, raw_prediction)
         total_wer.append(error_rate)
 
+        fixed_prediction = correct_text(raw_prediction)
+
         results.append({
             "Audio": row["path"],
             "Reference": reference,
-            "Raw Prediction": raw_prediction,
+            "Raw Prediction": fixed_prediction,
             "WER (%)": round(error_rate * 100, 2)
         })
 
