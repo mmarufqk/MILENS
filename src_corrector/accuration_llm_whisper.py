@@ -78,15 +78,7 @@ def main():
         raw_wer = compute_normalized_wer(reference, raw_prediction)
 
         fixed_prediction = correct_text(raw_prediction)
-        fixed_wer_temp = compute_normalized_wer(reference, fixed_prediction)
-
-        if fixed_wer_temp > raw_wer + 0.15:  
-            fixed_prediction = raw_prediction
-            fixed_wer = raw_wer
-        if compute_normalized_wer(raw_prediction, fixed_prediction) > 0.2:
-            fixed_prediction = raw_prediction
-        else:
-            fixed_wer = fixed_wer_temp
+        fixed_wer = compute_normalized_wer(reference, fixed_prediction)
 
         results.append({
             "Audio": row["path"],
