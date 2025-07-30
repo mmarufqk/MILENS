@@ -7,7 +7,8 @@ from jiwer import wer
 from vosk import Model, KaldiRecognizer
 
 BASE_DIR = os.path.dirname(__file__)
-MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-en-us-0.22")
+#MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-small-en-us-0.15")
+MODEL_PATH = os.path.join(BASE_DIR, "../models/whisper-tiny")
 DATASET_PATH = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/clips")
 TSV_FILE = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/validated.tsv")
 OUTPUT_CSV = os.path.join(BASE_DIR, "../output/commonvoice_results.csv")

@@ -2,7 +2,7 @@ import os
 import re
 from llama_cpp import Llama
 
-model_path = os.path.join(os.path.dirname(__file__), "../models/llm/tinyllama-1.1b-chat-v1.0.Q2_K.gguf")
+model_path = os.path.join(os.path.dirname(__file__), "../models/llm/gemma-2b-it.Q2_K.gguf")
 
 llm = Llama(model_path=model_path, verbose=False)
 
@@ -36,7 +36,7 @@ def correct_text(raw_text: str) -> str:
 
 if __name__ == "__main__":
     while True:
-        kalimat = input("Masukkan kalimat (atau ketik 'exit' untuk keluar): ")
+        kalimat = input("Masukkan kalimat: ")
         if kalimat.lower() == "exit":
             break
         hasil = correct_text(kalimat)

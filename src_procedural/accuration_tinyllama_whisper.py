@@ -2,21 +2,20 @@ import os
 import wave
 import json
 import pandas as pd
+from faster_whisper import WhisperModel  # karena menggunakan whisper full offline
 from pydub import AudioSegment
-from vosk import Model, KaldiRecognizer
 from llm_corrector_tinyllama import correct_text
 from jiwer import wer, Compose, ToLowerCase, RemovePunctuation, RemoveMultipleSpaces, RemoveWhiteSpace, ExpandCommonEnglishContractions
 
-
 BASE_DIR = os.path.dirname(__file__)
-MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-en-us-0.22")
+MODEL_PATH = os.path.join(BASE_DIR, "../models/whisper-tiny-ctranslate2")
+whisper_model = WhisperModel(MODEL_PATH, device="cpu", compute_type="int8")  # karena tidak menggunakn openAI Whisper API
 DATASET_PATH = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/clips")
 TSV_FILE = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/validated.tsv")
 OUTPUT_CSV = os.path.join(BASE_DIR, "../output/commonvoice_results_raw_only.csv")
 
 if not os.path.exists(MODEL_PATH):
     raise FileNotFoundError(f"Model path tidak ditemukan: {MODEL_PATH}")
-model = Model(MODEL_PATH)
 
 transform = Compose([
     ToLowerCase(),
@@ -42,19 +41,9 @@ def mp3_to_wav(mp3_path: str, wav_path: str):
 
 def transcribe_audio(wav_path: str) -> str:
     try:
-        wf = wave.open(wav_path, "rb")
-        rec = KaldiRecognizer(model, wf.getframerate())
-        rec.SetWords(True)
-
-        results = []
-        while True:
-            data = wf.readframes(4000)
-            if not data:
-                break
-            if rec.AcceptWaveform(data):
-                results.append(json.loads(rec.Result()))
-        results.append(json.loads(rec.FinalResult()))
-        return " ".join(res.get("text", "") for res in results)
+        # Gunakan WhisperModel untuk transkripsi
+        segments, _ = whisper_model.transcribe(wav_path)
+        return " ".join(segment.text for segment in segments)
     except Exception as e:
         print(f"[ERROR] Gagal transkripsi {wav_path}: {e}")
         return ""
