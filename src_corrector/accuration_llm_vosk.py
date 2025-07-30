@@ -4,26 +4,19 @@ import json
 import pandas as pd
 from pydub import AudioSegment
 from vosk import Model, KaldiRecognizer
-# Pilih hanya satu model koreksi di bawah ini:
-# from llm_corrector_tinyllama import correct_text
-# from llm_corrector_gemma2B import correct_text
-from llm_corrector_phi2 import correct_text
-
+from llm_corrector_phi2 import correct_text  # atau import yang lain jika diperlukan
 from jiwer import wer, Compose, ToLowerCase, RemovePunctuation, RemoveMultipleSpaces, RemoveWhiteSpace, ExpandCommonEnglishContractions
 
-# === Konfigurasi Path ===
 BASE_DIR = os.path.dirname(__file__)
 MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-small-en-us-0.15")
 DATASET_PATH = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/clips")
 TSV_FILE = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/validated.tsv")
-OUTPUT_CSV = os.path.join(BASE_DIR, "../output/commonvoice_results_raw_only.csv")
+OUTPUT_CSV = os.path.join(BASE_DIR, "../output/commonvoice_results_fixed.csv")
 
-# === Inisialisasi Model Vosk ===
 if not os.path.exists(MODEL_PATH):
     raise FileNotFoundError(f"Model path tidak ditemukan: {MODEL_PATH}")
 model = Model(MODEL_PATH)
 
-# === Transformasi Normalisasi untuk WER ===
 transform = Compose([
     ToLowerCase(),
     RemovePunctuation(),
@@ -38,7 +31,6 @@ def normalize_text(text: str) -> str:
 def compute_normalized_wer(ref: str, hyp: str) -> float:
     return wer(normalize_text(ref), normalize_text(hyp))
 
-# === Konversi MP3 ke WAV ===
 def mp3_to_wav(mp3_path: str, wav_path: str):
     try:
         sound = AudioSegment.from_mp3(mp3_path)
@@ -47,7 +39,6 @@ def mp3_to_wav(mp3_path: str, wav_path: str):
     except Exception as e:
         print(f"[ERROR] Gagal mengonversi {mp3_path}: {e}")
 
-# === Transkripsi Audio ===
 def transcribe_audio(wav_path: str) -> str:
     try:
         wf = wave.open(wav_path, "rb")
@@ -62,13 +53,11 @@ def transcribe_audio(wav_path: str) -> str:
             if rec.AcceptWaveform(data):
                 results.append(json.loads(rec.Result()))
         results.append(json.loads(rec.FinalResult()))
-
-        return " ".join(res.get("text", "") for res in results).strip()
+        return " ".join(res.get("text", "") for res in results)
     except Exception as e:
         print(f"[ERROR] Gagal transkripsi {wav_path}: {e}")
         return ""
 
-# === Pipeline Utama ===
 def main():
     if not os.path.exists(TSV_FILE):
         raise FileNotFoundError("File TSV tidak ditemukan.")
@@ -79,7 +68,8 @@ def main():
     sample_df = df.sample(20, random_state=42)
 
     results = []
-    total_wer = []
+    raw_wer_list = []
+    fixed_wer_list = []
 
     for _, row in sample_df.iterrows():
         mp3_file = os.path.join(DATASET_PATH, row["path"])
@@ -92,38 +82,45 @@ def main():
         mp3_to_wav(mp3_file, wav_file)
 
         reference = str(row["sentence"]).strip()
-        raw_prediction = transcribe_audio(wav_file)
+        raw_prediction = transcribe_audio(wav_file).strip()
 
         if not raw_prediction:
             print(f"[INFO] Transkripsi kosong: {row['path']}")
             continue
 
-        wer_score = compute_normalized_wer(reference, raw_prediction)
-        total_wer.append(wer_score)
-
+        raw_wer = compute_normalized_wer(reference, raw_prediction)
         fixed_prediction = correct_text(raw_prediction)
+        fixed_wer = compute_normalized_wer(reference, fixed_prediction)
 
         results.append({
             "Audio": row["path"],
             "Reference": reference,
-            "Raw Prediction": fixed_prediction,
-            "WER (%)": round(wer_score * 100, 2)
+            "Raw Prediction": raw_prediction,
+            "Fixed Prediction": fixed_prediction,
+            "WER (Raw)": round(raw_wer * 100, 2),
+            "WER (Fixed)": round(fixed_wer * 100, 2),
         })
+
+        raw_wer_list.append(raw_wer)
+        fixed_wer_list.append(fixed_wer)
 
         print(f"Audio : {row['path']}")
         print(f"Ref   : {reference}")
-        print(f"Hyp   : {fixed_prediction}")
-        print(f"WER   : {wer_score * 100:.2f}%\n")
+        print(f"Raw   : {raw_prediction}")
+        print(f"Fixed : {fixed_prediction}")
+        print(f"WER Raw   : {raw_wer * 100:.2f}%")
+        print(f"WER Fixed : {fixed_wer * 100:.2f}%\n")
 
     os.makedirs(os.path.dirname(OUTPUT_CSV), exist_ok=True)
     pd.DataFrame(results).to_csv(OUTPUT_CSV, index=False)
 
-    if total_wer:
-        avg_wer = sum(total_wer) / len(total_wer)
-        print(f"Rata-rata WER: {avg_wer * 100:.2f}%")
+    if raw_wer_list and fixed_wer_list:
+        avg_raw_wer = sum(raw_wer_list) / len(raw_wer_list)
+        avg_fixed_wer = sum(fixed_wer_list) / len(fixed_wer_list)
+        print(f"Rata-rata WER (Raw): {avg_raw_wer * 100:.2f}%")
+        print(f"Rata-rata WER (Fixed): {avg_fixed_wer * 100:.2f}%")
     else:
         print("Tidak ada data berhasil dihitung.")
-
     print(f"Hasil disimpan di: {OUTPUT_CSV}")
 
 if __name__ == "__main__":
