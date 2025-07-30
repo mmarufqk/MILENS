@@ -2,7 +2,7 @@ import os
 import wave
 import json
 import pandas as pd
-from faster_whisper import WhisperModel  # karena menggunakan whisper full offline
+from faster_whisper import WhisperModel
 from pydub import AudioSegment
 #from llm_corrector_tinyllama import correct_text # Jikaa ingin menggunakan tinyllama
 #from llm_corrector_gemma2B import correct_text   # Jika ingin menggunakan gemma2B
@@ -11,7 +11,7 @@ from jiwer import wer, Compose, ToLowerCase, RemovePunctuation, RemoveMultipleSp
 
 BASE_DIR = os.path.dirname(__file__)
 MODEL_PATH = os.path.join(BASE_DIR, "../models/whisper-tiny-ctranslate2")
-whisper_model = WhisperModel(MODEL_PATH, device="cpu", compute_type="int8")  # karena tidak menggunakn openAI Whisper API
+whisper_model = WhisperModel(MODEL_PATH, device="cpu", compute_type="int8")
 DATASET_PATH = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/clips")
 TSV_FILE = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/validated.tsv")
 OUTPUT_CSV = os.path.join(BASE_DIR, "../output/commonvoice_results_raw_only.csv")
