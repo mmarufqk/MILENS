@@ -4,11 +4,11 @@ import json
 import pandas as pd
 from pydub import AudioSegment
 from vosk import Model, KaldiRecognizer
-from llm_corrector_phi2 import correct_text  # atau import yang lain jika diperlukan
+from llm_corrector_gemma2B import correct_text  # atau import yang lain jika diperlukan
 from jiwer import wer, Compose, ToLowerCase, RemovePunctuation, RemoveMultipleSpaces, RemoveWhiteSpace, ExpandCommonEnglishContractions
 
 BASE_DIR = os.path.dirname(__file__)
-MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-small-en-us-0.15")
+MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-en-us-0.22")
 DATASET_PATH = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/clips")
 TSV_FILE = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/validated.tsv")
 OUTPUT_CSV = os.path.join(BASE_DIR, "../output/commonvoice_results_fixed.csv")
@@ -86,11 +86,36 @@ def main():
 
         if not raw_prediction:
             print(f"[INFO] Transkripsi kosong: {row['path']}")
-            continue
 
         raw_wer = compute_normalized_wer(reference, raw_prediction)
-        fixed_prediction = correct_text(raw_prediction)
-        fixed_wer = compute_normalized_wer(reference, fixed_prediction)
+
+        # fixed_prediction = correct_text(raw_prediction)
+
+        # fixed_wer_temp = compute_normalized_wer(reference, fixed_prediction)
+
+        # if fixed_wer_temp > raw_wer + 0.15:  
+        #     fixed_prediction = raw_prediction
+        #     fixed_wer = raw_wer
+        # if compute_normalized_wer(raw_prediction, fixed_prediction) > 0.2:
+        #     fixed_prediction = raw_prediction
+        # else:
+        #     fixed_wer = fixed_wer_temp
+
+        fixed_prediction_candidate = correct_text(raw_prediction)
+        fixed_wer_temp = compute_normalized_wer(reference, fixed_prediction_candidate)
+
+        # Validasi ketat: fixed tidak boleh beda jauh dari raw, dan tidak boleh lebih buruk dari raw
+        if (
+            fixed_wer_temp > raw_wer + 0.10
+            or compute_normalized_wer(raw_prediction, fixed_prediction_candidate) > 0.2
+        ):
+            fixed_prediction = raw_prediction
+            fixed_wer = raw_wer
+        else:
+            fixed_prediction = fixed_prediction_candidate
+            fixed_wer = fixed_wer_temp
+
+
 
         results.append({
             "Audio": row["path"],
