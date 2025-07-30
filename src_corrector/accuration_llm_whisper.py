@@ -2,8 +2,8 @@ import os
 import pandas as pd
 from faster_whisper import WhisperModel
 from pydub import AudioSegment
-#from llm_corrector_phi2 import correct_text 
-from llm_corrector_gemma2B import correct_text 
+from llm_corrector_phi2 import correct_text 
+#from llm_corrector_gemma2B import correct_text 
 #from llm_corrector_tinyllama import correct_text
 from jiwer import wer, Compose, ToLowerCase, RemovePunctuation, RemoveMultipleSpaces, RemoveWhiteSpace, ExpandCommonEnglishContractions
 
