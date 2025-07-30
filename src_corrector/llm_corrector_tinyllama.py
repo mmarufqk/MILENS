@@ -20,9 +20,9 @@ def correct_text(raw_text: str) -> str:
         return raw_text
 
     prompt = (
-        "Correct the following English sentence strictly for grammar, punctuation, and spelling only.\n"
-        "Do NOT change word choice or meaning.\n"
-        "Return only the corrected sentence, without explanations or formatting.\n\n"
+        "Correct only the spelling mistakes in the following sentence.\n"
+        "Do not change grammar, punctuation, or word order.\n"
+        "Return only the corrected sentence without any explanation.\n\n"
         f"Sentence: {raw_text}\n"
         "Corrected:"
     )
@@ -42,14 +42,12 @@ def correct_text(raw_text: str) -> str:
         if not result:
             return raw_text
 
+        # Kalau hasil lebih panjang 2x, kemungkinan ngawur
         if len(result.split()) > len(raw_text.split()) * 2:
             return raw_text
 
+        # Kalau hasil sama dengan input (lowercase), anggap tidak ada koreksi
         if result.lower() == raw_text.lower():
-            return raw_text
-
-        # Jika hasil malah menambah kata-kata tak relevan (sering terjadi di model kecil)
-        if abs(len(result.split()) - len(raw_text.split())) > 5:
             return raw_text
 
         return result
