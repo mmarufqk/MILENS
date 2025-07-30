@@ -1,0 +1,24 @@
+BEGIN
+
+SET llama_model_path TO path of "../models/llm/tinyllama-1.1b-chat-v1.0.Q2_K.gguf" relative to this file
+LOAD LLaMA model from llama_model_path
+
+DEFINE FUNCTION clean_response(text)
+    IF text contains ":"
+        SPLIT text by ":" and TAKE the last part
+    REMOVE all characters that are NOT letters, numbers, spaces, or basic punctuation (.,?!'-)
+    RETURN trimmed cleaned text
+END FUNCTION
+
+DEFINE FUNCTION correct_text(raw_text)
+    IF raw_text is empty or only spaces
+        RETURN raw_text
+
+    SET prompt TO "Fix the spelling and grammar of this English sentence: 'raw_text'"
+    SEND prompt to LLaMA model with max_tokens = 100
+    GET the generated text from the response
+    CLEAN the response using clean_response function
+    RETURN the cleaned result
+END FUNCTION
+
+END

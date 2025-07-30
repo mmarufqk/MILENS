@@ -1,4 +1,4 @@
-from llm_corrector import correct_text
+from llm_corrector_tinyllama import correct_text
 
 def main():
     try:
