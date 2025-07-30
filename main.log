@@ -1,160 +1,208 @@
-[1753863942] Log start
-[1753863942] Cmd: ./models/llm/phi-2.Q2_K.llamafile -m phi-2.Q2_K.gguf --temp 0.2 -p "Correct the grammar, spelling, and punctuation of the following sentence.
+[1753866195] Log start
+[1753866195] Cmd: ./models/llm/phi-2.Q2_K.llamafile -m phi-2.Q2_K.gguf --temp 0.2 -p "Correct the grammar, spelling, and punctuation of the following sentence.
 Return only the corrected version. Do not explain, repeat, or add anything.
 
-Sentence: i has an apple
+Sentence: kafi eating mango
 Corrected:"
-[1753863942] warning: this OS doesn't support pledge() security
-[1753863942] main: seed  = 1753863942
-[1753863942] main: llama backend init
-[1753863942] main: load the model and apply lora adapter, if any
-[1753863943] llama_model_loader: loaded meta data with 20 key-value pairs and 453 tensors from phi-2.Q2_K.gguf (version GGUF V3 (latest))
-[1753863943] llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
-[1753863943] llama_model_loader: - kv   0:                       general.architecture str              = phi2
-[1753863943] llama_model_loader: - kv   1:                               general.name str              = Phi2
-[1753863943] llama_model_loader: - kv   2:                        phi2.context_length u32              = 2048
-[1753863943] llama_model_loader: - kv   3:                      phi2.embedding_length u32              = 2560
-[1753863943] llama_model_loader: - kv   4:                   phi2.feed_forward_length u32              = 10240
-[1753863943] llama_model_loader: - kv   5:                           phi2.block_count u32              = 32
-[1753863943] llama_model_loader: - kv   6:                  phi2.attention.head_count u32              = 32
-[1753863943] llama_model_loader: - kv   7:               phi2.attention.head_count_kv u32              = 32
-[1753863943] llama_model_loader: - kv   8:          phi2.attention.layer_norm_epsilon f32              = 0.000010
-[1753863943] llama_model_loader: - kv   9:                  phi2.rope.dimension_count u32              = 32
-[1753863943] llama_model_loader: - kv  10:                          general.file_type u32              = 10
-[1753863943] llama_model_loader: - kv  11:               tokenizer.ggml.add_bos_token bool             = false
-[1753863943] llama_model_loader: - kv  12:                       tokenizer.ggml.model str              = gpt2
-[1753863943] llama_model_loader: - kv  13:                      tokenizer.ggml.tokens arr[str,51200]   = ["!", "\"", "#", "$", "%", "&", "'", ...
-[1753863943] llama_model_loader: - kv  14:                  tokenizer.ggml.token_type arr[i32,51200]   = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
-[1753863943] llama_model_loader: - kv  15:                      tokenizer.ggml.merges arr[str,50000]   = ["Ġ t", "Ġ a", "h e", "i n", "r e",...
-[1753863943] llama_model_loader: - kv  16:                tokenizer.ggml.bos_token_id u32              = 50256
-[1753863943] llama_model_loader: - kv  17:                tokenizer.ggml.eos_token_id u32              = 50256
-[1753863943] llama_model_loader: - kv  18:            tokenizer.ggml.unknown_token_id u32              = 50256
-[1753863943] llama_model_loader: - kv  19:               general.quantization_version u32              = 2
-[1753863943] llama_model_loader: - type  f32:  259 tensors
-[1753863943] llama_model_loader: - type q2_K:   97 tensors
-[1753863943] llama_model_loader: - type q3_K:   96 tensors
-[1753863943] llama_model_loader: - type q6_K:    1 tensors
-[1753863944] llm_load_vocab: mismatch in special tokens definition ( 910/51200 vs 944/51200 ).
-[1753863944] llm_load_print_meta: format           = GGUF V3 (latest)
-[1753863944] llm_load_print_meta: arch             = phi2
-[1753863944] llm_load_print_meta: vocab type       = BPE
-[1753863944] llm_load_print_meta: n_vocab          = 51200
-[1753863944] llm_load_print_meta: n_merges         = 50000
-[1753863944] llm_load_print_meta: n_ctx_train      = 2048
-[1753863944] llm_load_print_meta: n_embd           = 2560
-[1753863944] llm_load_print_meta: n_head           = 32
-[1753863944] llm_load_print_meta: n_head_kv        = 32
-[1753863944] llm_load_print_meta: n_layer          = 32
-[1753863944] llm_load_print_meta: n_rot            = 32
-[1753863944] llm_load_print_meta: n_embd_head_k    = 80
-[1753863944] llm_load_print_meta: n_embd_head_v    = 80
-[1753863944] llm_load_print_meta: n_gqa            = 1
-[1753863944] llm_load_print_meta: n_embd_k_gqa     = 2560
-[1753863944] llm_load_print_meta: n_embd_v_gqa     = 2560
-[1753863944] llm_load_print_meta: f_norm_eps       = 1.0e-05
-[1753863944] llm_load_print_meta: f_norm_rms_eps   = 0.0e+00
-[1753863944] llm_load_print_meta: f_clamp_kqv      = 0.0e+00
-[1753863944] llm_load_print_meta: f_max_alibi_bias = 0.0e+00
-[1753863944] llm_load_print_meta: f_logit_scale    = 0.0e+00
-[1753863944] llm_load_print_meta: n_ff             = 10240
-[1753863944] llm_load_print_meta: n_expert         = 0
-[1753863944] llm_load_print_meta: n_expert_used    = 0
-[1753863944] llm_load_print_meta: causal attn      = 1
-[1753863944] llm_load_print_meta: pooling type     = 0
-[1753863944] llm_load_print_meta: rope type        = 2
-[1753863944] llm_load_print_meta: rope scaling     = linear
-[1753863944] llm_load_print_meta: freq_base_train  = 10000.0
-[1753863944] llm_load_print_meta: freq_scale_train = 1
-[1753863944] llm_load_print_meta: n_yarn_orig_ctx  = 2048
-[1753863944] llm_load_print_meta: rope_finetuned   = unknown
-[1753863944] llm_load_print_meta: ssm_d_conv       = 0
-[1753863944] llm_load_print_meta: ssm_d_inner      = 0
-[1753863944] llm_load_print_meta: ssm_d_state      = 0
-[1753863944] llm_load_print_meta: ssm_dt_rank      = 0
-[1753863944] llm_load_print_meta: model type       = 3B
-[1753863944] llm_load_print_meta: model ftype      = Q2_K - Medium
-[1753863944] llm_load_print_meta: model params     = 2.78 B
-[1753863944] llm_load_print_meta: model size       = 1.03 GiB (3.19 BPW) 
-[1753863944] llm_load_print_meta: general.name     = Phi2
-[1753863944] llm_load_print_meta: BOS token        = 50256 '<|endoftext|>'
-[1753863944] llm_load_print_meta: EOS token        = 50256 '<|endoftext|>'
-[1753863944] llm_load_print_meta: UNK token        = 50256 '<|endoftext|>'
-[1753863944] llm_load_print_meta: LF token         = 128 'Ä'
-[1753863944] llm_load_tensors: ggml ctx size =    0.17 MiB
-[1753863944] llm_load_tensors:        CPU buffer size =  1056.58 MiB
-[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] .[1753863944] 
-[1753863944] llama_new_context_with_model: n_ctx      = 512
-[1753863944] llama_new_context_with_model: n_batch    = 512
-[1753863944] llama_new_context_with_model: n_ubatch   = 512
-[1753863944] llama_new_context_with_model: freq_base  = 10000.0
-[1753863944] llama_new_context_with_model: freq_scale = 1
-[1753863944] llama_kv_cache_init:        CPU KV buffer size =   160.00 MiB
-[1753863944] llama_new_context_with_model: KV self size  =  160.00 MiB, K (f16):   80.00 MiB, V (f16):   80.00 MiB
-[1753863944] llama_new_context_with_model:        CPU  output buffer size =   100.00 MiB
-[1753863944] llama_new_context_with_model:        CPU compute buffer size =   105.00 MiB
-[1753863944] llama_new_context_with_model: graph nodes  = 1190
-[1753863944] llama_new_context_with_model: graph splits = 1
-[1753863944] warming up the model with an empty run
-[1753863947] n_ctx: 512
-[1753863947] 
-[1753863947] system_info: n_threads = 4 / 8 | AVX = 1 | AVX_VNNI = 0 | AVX2 = 1 | AVX512 = 0 | AVX512_VBMI = 0 | AVX512_VNNI = 0 | FMA = 1 | NEON = 0 | ARM_FMA = 0 | F16C = 1 | FP16_VA = 0 | WASM_SIMD = 0 | BLAS = 0 | SSE3 = 1 | SSSE3 = 1 | VSX = 0 | MATMUL_INT8 = 0 | 
-[1753863947] add_bos: 0
-[1753863947] tokenize the prompt
-[1753863947] prompt: "Correct the grammar, spelling, and punctuation of the following sentence.
+[1753866195] warning: this OS doesn't support pledge() security
+[1753866195] main: seed  = 1753866195
+[1753866195] main: llama backend init
+[1753866195] main: load the model and apply lora adapter, if any
+[1753866196] llama_model_loader: loaded meta data with 20 key-value pairs and 453 tensors from phi-2.Q2_K.gguf (version GGUF V3 (latest))
+[1753866196] llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+[1753866196] llama_model_loader: - kv   0:                       general.architecture str              = phi2
+[1753866196] llama_model_loader: - kv   1:                               general.name str              = Phi2
+[1753866196] llama_model_loader: - kv   2:                        phi2.context_length u32              = 2048
+[1753866196] llama_model_loader: - kv   3:                      phi2.embedding_length u32              = 2560
+[1753866196] llama_model_loader: - kv   4:                   phi2.feed_forward_length u32              = 10240
+[1753866196] llama_model_loader: - kv   5:                           phi2.block_count u32              = 32
+[1753866196] llama_model_loader: - kv   6:                  phi2.attention.head_count u32              = 32
+[1753866196] llama_model_loader: - kv   7:               phi2.attention.head_count_kv u32              = 32
+[1753866196] llama_model_loader: - kv   8:          phi2.attention.layer_norm_epsilon f32              = 0.000010
+[1753866196] llama_model_loader: - kv   9:                  phi2.rope.dimension_count u32              = 32
+[1753866196] llama_model_loader: - kv  10:                          general.file_type u32              = 10
+[1753866196] llama_model_loader: - kv  11:               tokenizer.ggml.add_bos_token bool             = false
+[1753866196] llama_model_loader: - kv  12:                       tokenizer.ggml.model str              = gpt2
+[1753866196] llama_model_loader: - kv  13:                      tokenizer.ggml.tokens arr[str,51200]   = ["!", "\"", "#", "$", "%", "&", "'", ...
+[1753866196] llama_model_loader: - kv  14:                  tokenizer.ggml.token_type arr[i32,51200]   = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+[1753866196] llama_model_loader: - kv  15:                      tokenizer.ggml.merges arr[str,50000]   = ["Ġ t", "Ġ a", "h e", "i n", "r e",...
+[1753866196] llama_model_loader: - kv  16:                tokenizer.ggml.bos_token_id u32              = 50256
+[1753866196] llama_model_loader: - kv  17:                tokenizer.ggml.eos_token_id u32              = 50256
+[1753866196] llama_model_loader: - kv  18:            tokenizer.ggml.unknown_token_id u32              = 50256
+[1753866196] llama_model_loader: - kv  19:               general.quantization_version u32              = 2
+[1753866196] llama_model_loader: - type  f32:  259 tensors
+[1753866196] llama_model_loader: - type q2_K:   97 tensors
+[1753866196] llama_model_loader: - type q3_K:   96 tensors
+[1753866196] llama_model_loader: - type q6_K:    1 tensors
+[1753866197] llm_load_vocab: mismatch in special tokens definition ( 910/51200 vs 944/51200 ).
+[1753866197] llm_load_print_meta: format           = GGUF V3 (latest)
+[1753866197] llm_load_print_meta: arch             = phi2
+[1753866197] llm_load_print_meta: vocab type       = BPE
+[1753866197] llm_load_print_meta: n_vocab          = 51200
+[1753866197] llm_load_print_meta: n_merges         = 50000
+[1753866197] llm_load_print_meta: n_ctx_train      = 2048
+[1753866197] llm_load_print_meta: n_embd           = 2560
+[1753866197] llm_load_print_meta: n_head           = 32
+[1753866197] llm_load_print_meta: n_head_kv        = 32
+[1753866197] llm_load_print_meta: n_layer          = 32
+[1753866197] llm_load_print_meta: n_rot            = 32
+[1753866197] llm_load_print_meta: n_embd_head_k    = 80
+[1753866197] llm_load_print_meta: n_embd_head_v    = 80
+[1753866197] llm_load_print_meta: n_gqa            = 1
+[1753866197] llm_load_print_meta: n_embd_k_gqa     = 2560
+[1753866197] llm_load_print_meta: n_embd_v_gqa     = 2560
+[1753866197] llm_load_print_meta: f_norm_eps       = 1.0e-05
+[1753866197] llm_load_print_meta: f_norm_rms_eps   = 0.0e+00
+[1753866197] llm_load_print_meta: f_clamp_kqv      = 0.0e+00
+[1753866197] llm_load_print_meta: f_max_alibi_bias = 0.0e+00
+[1753866197] llm_load_print_meta: f_logit_scale    = 0.0e+00
+[1753866197] llm_load_print_meta: n_ff             = 10240
+[1753866197] llm_load_print_meta: n_expert         = 0
+[1753866197] llm_load_print_meta: n_expert_used    = 0
+[1753866197] llm_load_print_meta: causal attn      = 1
+[1753866197] llm_load_print_meta: pooling type     = 0
+[1753866197] llm_load_print_meta: rope type        = 2
+[1753866197] llm_load_print_meta: rope scaling     = linear
+[1753866197] llm_load_print_meta: freq_base_train  = 10000.0
+[1753866197] llm_load_print_meta: freq_scale_train = 1
+[1753866197] llm_load_print_meta: n_yarn_orig_ctx  = 2048
+[1753866197] llm_load_print_meta: rope_finetuned   = unknown
+[1753866197] llm_load_print_meta: ssm_d_conv       = 0
+[1753866197] llm_load_print_meta: ssm_d_inner      = 0
+[1753866197] llm_load_print_meta: ssm_d_state      = 0
+[1753866197] llm_load_print_meta: ssm_dt_rank      = 0
+[1753866197] llm_load_print_meta: model type       = 3B
+[1753866197] llm_load_print_meta: model ftype      = Q2_K - Medium
+[1753866197] llm_load_print_meta: model params     = 2.78 B
+[1753866197] llm_load_print_meta: model size       = 1.03 GiB (3.19 BPW) 
+[1753866197] llm_load_print_meta: general.name     = Phi2
+[1753866197] llm_load_print_meta: BOS token        = 50256 '<|endoftext|>'
+[1753866197] llm_load_print_meta: EOS token        = 50256 '<|endoftext|>'
+[1753866197] llm_load_print_meta: UNK token        = 50256 '<|endoftext|>'
+[1753866197] llm_load_print_meta: LF token         = 128 'Ä'
+[1753866197] llm_load_tensors: ggml ctx size =    0.17 MiB
+[1753866197] llm_load_tensors:        CPU buffer size =  1056.58 MiB
+[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] .[1753866197] 
+[1753866197] llama_new_context_with_model: n_ctx      = 512
+[1753866197] llama_new_context_with_model: n_batch    = 512
+[1753866197] llama_new_context_with_model: n_ubatch   = 512
+[1753866197] llama_new_context_with_model: freq_base  = 10000.0
+[1753866197] llama_new_context_with_model: freq_scale = 1
+[1753866197] llama_kv_cache_init:        CPU KV buffer size =   160.00 MiB
+[1753866197] llama_new_context_with_model: KV self size  =  160.00 MiB, K (f16):   80.00 MiB, V (f16):   80.00 MiB
+[1753866198] llama_new_context_with_model:        CPU  output buffer size =   100.00 MiB
+[1753866198] llama_new_context_with_model:        CPU compute buffer size =   105.00 MiB
+[1753866198] llama_new_context_with_model: graph nodes  = 1190
+[1753866198] llama_new_context_with_model: graph splits = 1
+[1753866198] warming up the model with an empty run
+[1753866201] n_ctx: 512
+[1753866201] 
+[1753866201] system_info: n_threads = 4 / 8 | AVX = 1 | AVX_VNNI = 0 | AVX2 = 1 | AVX512 = 0 | AVX512_VBMI = 0 | AVX512_VNNI = 0 | FMA = 1 | NEON = 0 | ARM_FMA = 0 | F16C = 1 | FP16_VA = 0 | WASM_SIMD = 0 | BLAS = 0 | SSE3 = 1 | SSSE3 = 1 | VSX = 0 | MATMUL_INT8 = 0 | 
+[1753866201] add_bos: 0
+[1753866201] tokenize the prompt
+[1753866201] prompt: "Correct the grammar, spelling, and punctuation of the following sentence.
 Return only the corrected version. Do not explain, repeat, or add anything.
 
-Sentence: i has an apple
+Sentence: kafi eating mango
 Corrected:"
-[1753863947] tokens: [ 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' i':1312, ' has':468, ' an':281, ' apple':17180, '':198, 'Correct':42779, 'ed':276, ':':25 ]
-[1753863947] recalculate the cached logits (check): embd_inp.empty() false, n_matching_session_tokens 0, embd_inp.size() 44, session_tokens.size() 0, embd_inp.size() 44
-[1753863947] inp_pfx: [ '':628, '###':21017, ' Instruction':46486, ':':25, '':628 ]
-[1753863947] inp_sfx: [ '':628, '###':21017, ' Response':18261, ':':25, '':628 ]
-[1753863947] cml_pfx: [ '':198, '<':27, '|':91, 'im':320, '_':62, 'start':9688, '|':91, '>':29, 'user':7220, '':198 ]
-[1753863947] cml_sfx: [ '<':27, '|':91, 'im':320, '_':62, 'end':437, '|':91, '>':29, '':198, '<':27, '|':91, 'im':320, '_':62, 'start':9688, '|':91, '>':29, 'ass':562, 'istant':10167, '':198 ]
-[1753863947] sampling: 
+[1753866201] tokens: [ 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25 ]
+[1753866201] recalculate the cached logits (check): embd_inp.empty() false, n_matching_session_tokens 0, embd_inp.size() 44, session_tokens.size() 0, embd_inp.size() 44
+[1753866201] inp_pfx: [ '':628, '###':21017, ' Instruction':46486, ':':25, '':628 ]
+[1753866201] inp_sfx: [ '':628, '###':21017, ' Response':18261, ':':25, '':628 ]
+[1753866201] cml_pfx: [ '':198, '<':27, '|':91, 'im':320, '_':62, 'start':9688, '|':91, '>':29, 'user':7220, '':198 ]
+[1753866201] cml_sfx: [ '<':27, '|':91, 'im':320, '_':62, 'end':437, '|':91, '>':29, '':198, '<':27, '|':91, 'im':320, '_':62, 'start':9688, '|':91, '>':29, 'ass':562, 'istant':10167, '':198 ]
+[1753866201] sampling: 
 	repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000
 	top_k = 40, tfs_z = 1.000, top_p = 0.950, min_p = 0.050, typical_p = 1.000, temp = 0.200
 	mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000
-[1753863947] sampling order: 
+[1753866201] sampling order: 
 CFG -> Penalties -> top_k -> tfs_z -> typical_p -> top_p -> min_p -> temperature 
-[1753863947] generate: n_ctx = 512, n_batch = 2048, n_predict = -1, n_keep = 0
-[1753863947] 
+[1753866201] generate: n_ctx = 512, n_batch = 2048, n_predict = -1, n_keep = 0
+[1753866201] 
 
-[1753863947] embd_inp.size(): 44, n_consumed: 0
-[1753863947] eval: [ 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' i':1312, ' has':468, ' an':281, ' apple':17180, '':198, 'Correct':42779, 'ed':276, ':':25 ]
-[1753863954] n_past = 44
-[1753863954] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' i':1312, ' has':468, ' an':281, ' apple':17180, '':198, 'Correct':42779, 'ed':276, ':':25, ' I':314 ]
-[1753863954] n_remain: -2
-[1753863954] eval: [ ' I':314 ]
-[1753863954] n_past = 45
-[1753863954] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' i':1312, ' has':468, ' an':281, ' apple':17180, '':198, 'Correct':42779, 'ed':276, ':':25, ' I':314, ' have':423 ]
-[1753863954] n_remain: -3
-[1753863954] eval: [ ' have':423 ]
-[1753863954] n_past = 46
-[1753863954] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' i':1312, ' has':468, ' an':281, ' apple':17180, '':198, 'Correct':42779, 'ed':276, ':':25, ' I':314, ' have':423, ' an':281 ]
-[1753863954] n_remain: -4
-[1753863954] eval: [ ' an':281 ]
-[1753863954] n_past = 47
-[1753863954] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' i':1312, ' has':468, ' an':281, ' apple':17180, '':198, 'Correct':42779, 'ed':276, ':':25, ' I':314, ' have':423, ' an':281, ' apple':17180 ]
-[1753863954] n_remain: -5
-[1753863954] eval: [ ' apple':17180 ]
-[1753863955] n_past = 48
-[1753863955] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' i':1312, ' has':468, ' an':281, ' apple':17180, '':198, 'Correct':42779, 'ed':276, ':':25, ' I':314, ' have':423, ' an':281, ' apple':17180, '.':13 ]
-[1753863955] n_remain: -6
-[1753863955] eval: [ '.':13 ]
-[1753863955] n_past = 49
-[1753863955] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' i':1312, ' has':468, ' an':281, ' apple':17180, '':198, 'Correct':42779, 'ed':276, ':':25, ' I':314, ' have':423, ' an':281, ' apple':17180, '.':13, '':198 ]
-[1753863955] n_remain: -7
-[1753863955] eval: [ '':198 ]
-[1753863955] n_past = 50
-[1753863955] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' i':1312, ' has':468, ' an':281, ' apple':17180, '':198, 'Correct':42779, 'ed':276, ':':25, ' I':314, ' have':423, ' an':281, ' apple':17180, '.':13, '':198, '':50256 ]
-[1753863955] n_remain: -8
-[1753863955] found EOS token
-[1753863955]  [end of text]
-[1753863955] 
-[1753863955] llama_print_timings:        load time =    3115.36 ms
-[1753863955] llama_print_timings:      sample time =       0.77 ms /     7 runs   (    0.11 ms per token,  9138.38 tokens per second)
-[1753863955] llama_print_timings: prompt eval time =    7157.47 ms /    44 tokens (  162.67 ms per token,     6.15 tokens per second)
-[1753863955] llama_print_timings:        eval time =    1062.51 ms /     6 runs   (  177.09 ms per token,     5.65 tokens per second)
-[1753863955] llama_print_timings:       total time =    8242.02 ms /    50 tokens
-[1753863955] Log end
+[1753866201] embd_inp.size(): 44, n_consumed: 0
+[1753866201] eval: [ 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25 ]
+[1753866209] n_past = 44
+[1753866209] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509 ]
+[1753866209] n_remain: -2
+[1753866209] eval: [ ' K':509 ]
+[1753866209] n_past = 45
+[1753866209] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32 ]
+[1753866209] n_remain: -3
+[1753866209] eval: [ 'A':32 ]
+[1753866209] n_past = 46
+[1753866209] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12 ]
+[1753866209] n_remain: -4
+[1753866209] eval: [ '-':12 ]
+[1753866210] n_past = 47
+[1753866210] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12, 'FI':11674 ]
+[1753866210] n_remain: -5
+[1753866210] eval: [ 'FI':11674 ]
+[1753866210] n_past = 48
+[1753866210] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12, 'FI':11674, '-':12 ]
+[1753866210] n_remain: -6
+[1753866210] eval: [ '-':12 ]
+[1753866210] n_past = 49
+[1753866210] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12, 'FI':11674, '-':12, 'E':36 ]
+[1753866210] n_remain: -7
+[1753866210] eval: [ 'E':36 ]
+[1753866210] n_past = 50
+[1753866210] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12, 'FI':11674, '-':12, 'E':36, 'ATING':33881 ]
+[1753866210] n_remain: -8
+[1753866210] eval: [ 'ATING':33881 ]
+[1753866210] n_past = 51
+[1753866210] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12, 'FI':11674, '-':12, 'E':36, 'ATING':33881, '-':12 ]
+[1753866210] n_remain: -9
+[1753866210] eval: [ '-':12 ]
+[1753866211] n_past = 52
+[1753866211] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12, 'FI':11674, '-':12, 'E':36, 'ATING':33881, '-':12, 'MA':5673 ]
+[1753866211] n_remain: -10
+[1753866211] eval: [ 'MA':5673 ]
+[1753866211] n_past = 53
+[1753866211] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12, 'FI':11674, '-':12, 'E':36, 'ATING':33881, '-':12, 'MA':5673, '-':12 ]
+[1753866211] n_remain: -11
+[1753866211] eval: [ '-':12 ]
+[1753866211] n_past = 54
+[1753866211] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12, 'FI':11674, '-':12, 'E':36, 'ATING':33881, '-':12, 'MA':5673, '-':12, 'G':38 ]
+[1753866211] n_remain: -12
+[1753866211] eval: [ 'G':38 ]
+[1753866212] n_past = 55
+[1753866212] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12, 'FI':11674, '-':12, 'E':36, 'ATING':33881, '-':12, 'MA':5673, '-':12, 'G':38, '-':12 ]
+[1753866212] n_remain: -13
+[1753866212] eval: [ '-':12 ]
+[1753866212] n_past = 56
+[1753866212] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12, 'FI':11674, '-':12, 'E':36, 'ATING':33881, '-':12, 'MA':5673, '-':12, 'G':38, '-':12, 'O':46 ]
+[1753866212] n_remain: -14
+[1753866212] eval: [ 'O':46 ]
+[1753866212] n_past = 57
+[1753866212] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12, 'FI':11674, '-':12, 'E':36, 'ATING':33881, '-':12, 'MA':5673, '-':12, 'G':38, '-':12, 'O':46, '-':12 ]
+[1753866212] n_remain: -15
+[1753866212] eval: [ '-':12 ]
+[1753866212] n_past = 58
+[1753866212] last: [ '!':0, '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12, 'FI':11674, '-':12, 'E':36, 'ATING':33881, '-':12, 'MA':5673, '-':12, 'G':38, '-':12, 'O':46, '-':12, 'N':45 ]
+[1753866212] n_remain: -16
+[1753866212] eval: [ 'N':45 ]
+[1753866212] n_past = 59
+[1753866212] last: [ '!':0, '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12, 'FI':11674, '-':12, 'E':36, 'ATING':33881, '-':12, 'MA':5673, '-':12, 'G':38, '-':12, 'O':46, '-':12, 'N':45, '-':12 ]
+[1753866212] n_remain: -17
+[1753866212] eval: [ '-':12 ]
+[1753866213] n_past = 60
+[1753866213] last: [ '!':0, '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12, 'FI':11674, '-':12, 'E':36, 'ATING':33881, '-':12, 'MA':5673, '-':12, 'G':38, '-':12, 'O':46, '-':12, 'N':45, '-':12, 'A':32 ]
+[1753866213] n_remain: -18
+[1753866213] eval: [ 'A':32 ]
+[1753866213] n_past = 61
+[1753866213] last: [ '!':0, '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12, 'FI':11674, '-':12, 'E':36, 'ATING':33881, '-':12, 'MA':5673, '-':12, 'G':38, '-':12, 'O':46, '-':12, 'N':45, '-':12, 'A':32, '':198 ]
+[1753866213] n_remain: -19
+[1753866213] eval: [ '':198 ]
+[1753866213] n_past = 62
+[1753866213] last: [ '!':0, 'Correct':42779, ' the':262, ' grammar':23491, ',':11, ' spelling':24993, ',':11, ' and':290, ' punct':21025, 'uation':2288, ' of':286, ' the':262, ' following':1708, ' sentence':6827, '.':13, '':198, 'Return':13615, ' only':691, ' the':262, ' corrected':19267, ' version':2196, '.':13, ' Do':2141, ' not':407, ' explain':4727, ',':11, ' repeat':9585, ',':11, ' or':393, ' add':751, ' anything':1997, '.':13, '':198, '':198, 'Sent':31837, 'ence':594, ':':25, ' k':479, 'afi':19910, ' eating':6600, ' mango':49364, '':198, 'Correct':42779, 'ed':276, ':':25, ' K':509, 'A':32, '-':12, 'FI':11674, '-':12, 'E':36, 'ATING':33881, '-':12, 'MA':5673, '-':12, 'G':38, '-':12, 'O':46, '-':12, 'N':45, '-':12, 'A':32, '':198, '':50256 ]
+[1753866213] n_remain: -20
+[1753866213] found EOS token
+[1753866213]  [end of text]
+[1753866213] 
+[1753866213] llama_print_timings:        load time =    4191.33 ms
+[1753866213] llama_print_timings:      sample time =       1.94 ms /    19 runs   (    0.10 ms per token,  9819.12 tokens per second)
+[1753866213] llama_print_timings: prompt eval time =    7690.65 ms /    44 tokens (  174.79 ms per token,     5.72 tokens per second)
+[1753866213] llama_print_timings:        eval time =    4250.73 ms /    18 runs   (  236.15 ms per token,     4.23 tokens per second)
+[1753866213] llama_print_timings:       total time =   12171.41 ms /    62 tokens
+[1753866213] Log end
