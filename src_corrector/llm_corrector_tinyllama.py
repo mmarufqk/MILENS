@@ -2,7 +2,7 @@ import os
 import re
 from llama_cpp import Llama
 
-model_path = os.path.join(os.path.dirname(__file__), "../models/llm/tinyllama-1.1b-chat-v1.0.Q2_K.gguf")
+model_path = os.path.join(os.path.dirname(__file__), "../models/llm/phi3-wer")
 
 llm = Llama(model_path=model_path, verbose=False)
 
