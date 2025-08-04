@@ -9,6 +9,7 @@ from jiwer import wer, Compose, ToLowerCase, RemovePunctuation, RemoveMultipleSp
 
 BASE_DIR = os.path.dirname(__file__)
 MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-en-us-0.22")
+# MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-en-us-daanzu-20200905")
 DATASET_PATH = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/clips")
 TSV_FILE = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/validated.tsv")
 OUTPUT_CSV = os.path.join(BASE_DIR, "../output/commonvoice_results_fixed.csv")
@@ -45,18 +46,23 @@ def transcribe_audio(wav_path: str) -> str:
         rec = KaldiRecognizer(model, wf.getframerate())
         rec.SetWords(True)
 
-        results = []
+        full_result = []
         while True:
             data = wf.readframes(4000)
             if not data:
                 break
             if rec.AcceptWaveform(data):
-                results.append(json.loads(rec.Result()))
-        results.append(json.loads(rec.FinalResult()))
-        return " ".join(res.get("text", "") for res in results)
+                res = json.loads(rec.Result())
+                full_result.append(res.get("text", ""))
+
+        res_final = json.loads(rec.FinalResult())
+        final_text = " ".join(full_result + [res_final.get("text", "")]).strip()
+
+        return final_text
     except Exception as e:
         print(f"[ERROR] Gagal transkripsi {wav_path}: {e}")
         return ""
+
 
 def main():
     if not os.path.exists(TSV_FILE):
@@ -101,7 +107,7 @@ def main():
         else:
             fixed_prediction = fixed_prediction_candidate
             fixed_wer = fixed_wer_temp
-
+       
         results.append({
             "Audio": row["path"],
             "Reference": reference,
@@ -135,3 +141,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+

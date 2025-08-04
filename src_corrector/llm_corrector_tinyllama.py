@@ -20,12 +20,13 @@ def correct_text(raw_text: str) -> str:
         return raw_text
 
     prompt = (
-        "Correct only the spelling mistakes in the following sentence.\n"
-        "Do not change grammar, punctuation, or word order.\n"
-        "Return only the corrected sentence without any explanation.\n\n"
-        f"Sentence: {raw_text}\n"
-        "Corrected:"
+    "Correct only the spelling mistakes in the following sentence.\n"
+    "Do not change grammar, punctuation, capitalization, or word order.\n"
+    "Return only the corrected sentence without any explanation.\n\n"
+    f"Sentence: {raw_text}\n"
+    "Corrected:"
     )
+
 
     try:
         response = llm(
