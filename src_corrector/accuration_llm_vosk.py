@@ -5,7 +5,7 @@ import difflib
 import pandas as pd
 from pydub import AudioSegment
 from vosk import Model, KaldiRecognizer
-from llm_corrector_phi2 import correct_text  # atau import yang lain jika diperlukan
+from llm_corrector_gemma2B import correct_text  # atau import yang lain jika diperlukan
 from jiwer import wer, Compose, ToLowerCase, RemovePunctuation, RemoveMultipleSpaces, RemoveWhiteSpace, ExpandCommonEnglishContractions
 
 BASE_DIR = os.path.dirname(__file__)
