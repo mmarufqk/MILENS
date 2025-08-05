@@ -5,7 +5,7 @@ from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
 # Path ke file CSV hasil transkripsi
 BASE_DIR = os.path.dirname(__file__)
-csv_path = os.path.join(BASE_DIR, "../output/commonvoice_result_whisper-llama.csv")
+csv_path = os.path.join(BASE_DIR, "../output/commonvoice_results_vosk-phi.csv")
 
 # Baca data dari CSV
 df = pd.read_csv(csv_path)
