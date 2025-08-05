@@ -13,7 +13,7 @@ MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-en-us-0.22")
 # MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-en-us-daanzu-20200905")
 DATASET_PATH = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/clips")
 TSV_FILE = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/validated.tsv")
-OUTPUT_CSV = os.path.join(BASE_DIR, "../output/commonvoice_results_Vosk-phi2.csv")
+OUTPUT_CSV = os.path.join(BASE_DIR, "../output/commonvoice_results_Vosk-phi.csv")
 
 if not os.path.exists(MODEL_PATH):
     raise FileNotFoundError(f"Model path tidak ditemukan: {MODEL_PATH}")
@@ -135,6 +135,18 @@ def main():
 
     os.makedirs(os.path.dirname(OUTPUT_CSV), exist_ok=True)
     pd.DataFrame(results).to_csv(OUTPUT_CSV, index=False)
+    if results:
+        avg_raw_wer = sum(raw_wer_list) / len(raw_wer_list)
+        avg_fixed_wer = sum(fixed_wer_list) / len(fixed_wer_list)
+        results.append({
+            "Audio": "Average",
+            "Reference": "",
+            "Raw Prediction": "",
+            "Fixed Prediction": "",
+            "WER (Raw)": round(avg_raw_wer * 100, 2),
+            "WER (Fixed)": round(avg_fixed_wer * 100, 2),
+        })
+        pd.DataFrame(results).to_csv(OUTPUT_CSV, index=False, mode='a', header=False)
 
     if raw_wer_list and fixed_wer_list:
         avg_raw_wer = sum(raw_wer_list) / len(raw_wer_list)
