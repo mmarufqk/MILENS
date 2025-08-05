@@ -1,19 +1,23 @@
 import os
+import wave
+import json
 import pandas as pd
-from faster_whisper import WhisperModel
 from pydub import AudioSegment
-from llm_corrector_phi2 import correct_text 
-#from llm_corrector_gemma2B import correct_text 
+from vosk import Model, KaldiRecognizer
 #from llm_corrector_tinyllama import correct_text
+from llm_corrector_phi2 import correct_text  # Ganti sesuai LLM yang ingin digunakan    
 from jiwer import wer, Compose, ToLowerCase, RemovePunctuation, RemoveMultipleSpaces, RemoveWhiteSpace, ExpandCommonEnglishContractions
 
+
 BASE_DIR = os.path.dirname(__file__)
-MODEL_PATH = os.path.join(BASE_DIR, "../models/whisper-tiny-ctranslate2")
+MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-en-us-0.22")
 DATASET_PATH = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/clips")
 TSV_FILE = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/validated.tsv")
-OUTPUT_CSV = os.path.join(BASE_DIR, "../output/commonvoice_result_whisper-llama.csv")
+OUTPUT_CSV = os.path.join(BASE_DIR, "../output/commonvoice_results_raw_only.csv")
 
-whisper_model = WhisperModel(MODEL_PATH, device="cpu", compute_type="int8")
+if not os.path.exists(MODEL_PATH):
+    raise FileNotFoundError(f"Model path tidak ditemukan: {MODEL_PATH}")
+model = Model(MODEL_PATH)
 
 transform = Compose([
     ToLowerCase(),
@@ -39,8 +43,19 @@ def mp3_to_wav(mp3_path: str, wav_path: str):
 
 def transcribe_audio(wav_path: str) -> str:
     try:
-        segments, _ = whisper_model.transcribe(wav_path)
-        return " ".join(segment.text for segment in segments)
+        wf = wave.open(wav_path, "rb")
+        rec = KaldiRecognizer(model, wf.getframerate())
+        rec.SetWords(True)
+
+        results = []
+        while True:
+            data = wf.readframes(4000)
+            if not data:
+                break
+            if rec.AcceptWaveform(data):
+                results.append(json.loads(rec.Result()))
+        results.append(json.loads(rec.FinalResult()))
+        return " ".join(res.get("text", "") for res in results)
     except Exception as e:
         print(f"[ERROR] Gagal transkripsi {wav_path}: {e}")
         return ""
@@ -50,13 +65,14 @@ def main():
         raise FileNotFoundError("File TSV tidak ditemukan.")
 
     df = pd.read_csv(TSV_FILE, sep="\t")
+
     df["sentence_len"] = df["sentence"].apply(lambda x: len(str(x).split()))
     df = df[df["sentence_len"] >= 3]
+
     sample_df = df.sample(20, random_state=42)
 
     results = []
-    raw_wer_list = []
-    fixed_wer_list = []
+    total_wer = []
 
     for _, row in sample_df.iterrows():
         mp3_file = os.path.join(DATASET_PATH, row["path"])
@@ -75,52 +91,29 @@ def main():
             print(f"[INFO] Transkripsi kosong: {row['path']}")
             continue
 
-        raw_wer = compute_normalized_wer(reference, raw_prediction)
+        error_rate = compute_normalized_wer(reference, raw_prediction)
+        total_wer.append(error_rate)
 
         fixed_prediction = correct_text(raw_prediction)
-        fixed_wer = compute_normalized_wer(reference, fixed_prediction)
 
         results.append({
             "Audio": row["path"],
             "Reference": reference,
-            "Raw Prediction": raw_prediction,
-            "Fixed Prediction": fixed_prediction,
-            "WER (Raw)": round(raw_wer * 100, 2),
-            "WER (Fixed)": round(fixed_wer * 100, 2),
+            "Raw Prediction": fixed_prediction,
+            "WER (%)": round(error_rate * 100, 2)
         })
-
-        raw_wer_list.append(raw_wer)
-        fixed_wer_list.append(fixed_wer)
 
         print(f"Audio : {row['path']}")
         print(f"Ref   : {reference}")
-        print(f"Raw   : {raw_prediction}")
-        print(f"Fixed : {fixed_prediction}")
-        print(f"WER Raw   : {raw_wer * 100:.2f}%")
-        print(f"WER Fixed : {fixed_wer * 100:.2f}%\n")
+        print(f"Hyp   : {fixed_prediction}")
+        print(f"WER   : {error_rate * 100:.2f}%\n")
 
     os.makedirs(os.path.dirname(OUTPUT_CSV), exist_ok=True)
     pd.DataFrame(results).to_csv(OUTPUT_CSV, index=False)
-    # Tambahkan baris kosong + rata-rata ke file CSV
-    if results:
-        avg_raw_wer = sum(raw_wer_list) / len(raw_wer_list)
-        avg_fixed_wer = sum(fixed_wer_list) / len(fixed_wer_list)
-        results.append({
-            "Audio": "Average",
-            "Reference": "",
-            "Raw Prediction": "",
-            "Fixed Prediction": "",
-            "WER (Raw)": round(avg_raw_wer * 100, 2),
-            "WER (Fixed)": round(avg_fixed_wer * 100, 2),
-        })
-        pd.DataFrame(results).to_csv(OUTPUT_CSV, index=False, mode='a', header=False)
 
-
-    if raw_wer_list and fixed_wer_list:
-        avg_raw_wer = sum(raw_wer_list) / len(raw_wer_list)
-        avg_fixed_wer = sum(fixed_wer_list) / len(fixed_wer_list)
-        print(f"Rata-rata WER (Raw): {avg_raw_wer * 100:.2f}%")
-        print(f"Rata-rata WER (Fixed): {avg_fixed_wer * 100:.2f}%")
+    if total_wer:
+        avg_wer = sum(total_wer) / len(total_wer)
+        print(f"Rata-rata WER: {avg_wer * 100:.2f}%")
     else:
         print("Tidak ada data berhasil dihitung.")
     print(f"Hasil disimpan di: {OUTPUT_CSV}")

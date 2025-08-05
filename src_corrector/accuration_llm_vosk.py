@@ -4,7 +4,8 @@ import json
 import pandas as pd
 from pydub import AudioSegment
 from vosk import Model, KaldiRecognizer
-from llm_corrector_tinyllama import correct_text  # Ganti sesuai LLM yang ingin digunakan
+#from llm_corrector_tinyllama import correct_text  # Ganti sesuai LLM yang ingin digunakan
+from llm_corrector_phi2 import correct_text  # Ganti sesuai LLM yang ingin digunakan
 from jiwer import wer, Compose, ToLowerCase, RemovePunctuation, RemoveMultipleSpaces, RemoveWhiteSpace, ExpandCommonEnglishContractions
 
 # === Konfigurasi Path ===
