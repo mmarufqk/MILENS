@@ -2,13 +2,11 @@ import os
 import re
 from llama_cpp import Llama
 
-# Path ke model Gemma 2B
 model_path = os.path.join(
     os.path.dirname(__file__),
     "../models/llm/gemma-2b-it.Q2_K.gguf"
 )
 
-# Inisialisasi model
 llm = Llama(model_path=model_path, verbose=False)
 
 def clean_response(text: str) -> str:
@@ -20,9 +18,15 @@ def correct_text(raw_text: str) -> str:
         return raw_text
 
     prompt = (
-        "Correct only the spelling mistakes in the following sentence.\n"
-        "Do not change grammar, punctuation, or word order.\n"
-        "Return only the corrected sentence without any explanation.\n\n"
+        "You are a strict spell checker.\n"
+        "Correct only obvious spelling mistakes. Do not change grammar, punctuation, word order, or vocabulary.\n"
+        "Repeat the sentence exactly if it's already correct.\n\n"
+        "Example:\n"
+        "Sentence: I recieved the mesage.\nCorrected: I received the message.\n"
+        "Sentence: She is goood at math.\nCorrected: She is good at math.\n"
+        "Sentence: the quick brown fox jumps over the lazi dog\n"
+        "Corrected: the quick brown fox jumps over the lazy dog\n"
+        "Sentence: He have a book.\nCorrected: He have a book.\n"
         f"Sentence: {raw_text}\n"
         "Corrected:"
     )
@@ -31,24 +35,24 @@ def correct_text(raw_text: str) -> str:
         response = llm(
             prompt=prompt,
             max_tokens=100,
-            temperature=0.2,
+            temperature=0.1,
+            top_p=0.9,
             stop=["\n"]
         )
 
         result = response["choices"][0]["text"].strip()
         result = clean_response(result)
 
-        # Validasi hasil
         if not result:
             return raw_text
 
-        if len(result.split()) > len(raw_text.split()) * 2:
+        if len(result.split()) > len(raw_text.split()) * 1.2:
             return raw_text
 
         if result.lower() == raw_text.lower():
             return raw_text
 
-        if abs(len(result.split()) - len(raw_text.split())) > 5:
+        if abs(len(result.split()) - len(raw_text.split())) > 2:
             return raw_text
 
         return result
@@ -56,6 +60,7 @@ def correct_text(raw_text: str) -> str:
     except Exception as e:
         print(f"[ERROR] {e}")
         return raw_text
+
 
 if __name__ == "__main__":
     while True:

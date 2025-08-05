@@ -4,13 +4,22 @@ import json
 import pandas as pd
 from pydub import AudioSegment
 from vosk import Model, KaldiRecognizer
+<<<<<<< HEAD
 #from llm_corrector_tinyllama import correct_text  # Ganti sesuai LLM yang ingin digunakan
 from llm_corrector_phi2 import correct_text  # Ganti sesuai LLM yang ingin digunakan
+=======
+from llm_corrector_gemma2B import correct_text  # atau import yang lain jika diperlukan
+>>>>>>> da138d335b9cf57d45cd8d36e1e1e42aacbe55cd
 from jiwer import wer, Compose, ToLowerCase, RemovePunctuation, RemoveMultipleSpaces, RemoveWhiteSpace, ExpandCommonEnglishContractions
 
 # === Konfigurasi Path ===
 BASE_DIR = os.path.dirname(__file__)
+<<<<<<< HEAD
 MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-en-us-0.22")  # pastikan model sesuai
+=======
+MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-en-us-0.22")
+# MODEL_PATH = os.path.join(BASE_DIR, "../models/vosk-model-en-us-daanzu-20200905")
+>>>>>>> da138d335b9cf57d45cd8d36e1e1e42aacbe55cd
 DATASET_PATH = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/clips")
 TSV_FILE = os.path.join(BASE_DIR, "../models/cv-corpus-21.0-delta-2025-03-14/en/validated.tsv")
 OUTPUT_CSV = os.path.join(BASE_DIR, "../output/commonvoice_results_vosk_fixed.csv")
@@ -51,20 +60,28 @@ def transcribe_audio(wav_path: str) -> str:
         rec = KaldiRecognizer(vosk_model, wf.getframerate())
         rec.SetWords(True)
 
-        results = []
+        full_result = []
         while True:
             data = wf.readframes(4000)
             if not data:
                 break
             if rec.AcceptWaveform(data):
-                results.append(json.loads(rec.Result()))
-        results.append(json.loads(rec.FinalResult()))
-        return " ".join(res.get("text", "") for res in results)
+                res = json.loads(rec.Result())
+                full_result.append(res.get("text", ""))
+
+        res_final = json.loads(rec.FinalResult())
+        final_text = " ".join(full_result + [res_final.get("text", "")]).strip()
+
+        return final_text
     except Exception as e:
         print(f"[ERROR] Gagal transkripsi {wav_path}: {e}")
         return ""
 
+<<<<<<< HEAD
 # === Main Program ===
+=======
+
+>>>>>>> da138d335b9cf57d45cd8d36e1e1e42aacbe55cd
 def main():
     if not os.path.exists(TSV_FILE):
         raise FileNotFoundError("File TSV tidak ditemukan.")
@@ -93,13 +110,28 @@ def main():
 
         if not raw_prediction:
             print(f"[INFO] Transkripsi kosong: {row['path']}")
-            continue
 
         raw_wer = compute_normalized_wer(reference, raw_prediction)
+<<<<<<< HEAD
 
         fixed_prediction = correct_text(raw_prediction)
         fixed_wer = compute_normalized_wer(reference, fixed_prediction)
+=======
+>>>>>>> da138d335b9cf57d45cd8d36e1e1e42aacbe55cd
 
+        fixed_prediction_candidate = correct_text(raw_prediction)   
+        fixed_wer_temp = compute_normalized_wer(reference, fixed_prediction_candidate)
+
+        if (
+            fixed_wer_temp > raw_wer + 0.10
+            or compute_normalized_wer(raw_prediction, fixed_prediction_candidate) > 0.2
+        ):
+            fixed_prediction = raw_prediction
+            fixed_wer = raw_wer
+        else:
+            fixed_prediction = fixed_prediction_candidate
+            fixed_wer = fixed_wer_temp
+       
         results.append({
             "Audio": row["path"],
             "Model STT": "Vosk-en-us-0.22",
@@ -140,3 +172,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
