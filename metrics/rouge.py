@@ -6,7 +6,7 @@ from rouge_score import rouge_scorer
 # Path ke file CSV hasil transkripsi
 BASE_DIR = os.path.dirname(__file__)
 # csv_path = os.path.join(BASE_DIR, "../output/commonvoice_result_whisper-llama.csv")
-csv_path = os.path.join(BASE_DIR, "../output/commonvoice_result_whisper-phi2.csv")
+csv_path = os.path.join(BASE_DIR, "../output/commonvoice_result_whisper-Gemma.csv")
 
 # Baca data dari CSV
 df = pd.read_csv(csv_path)

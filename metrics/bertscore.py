@@ -5,7 +5,7 @@ from bert_score import score
 
 # Path ke file CSV hasil transkripsi
 BASE_DIR = os.path.dirname(__file__)
-csv_path = os.path.join(BASE_DIR, "../output/commonvoice_result_whisper-llama.csv")
+csv_path = os.path.join(BASE_DIR, "../output/commonvoice_results_Vosk-phi.csv")
 
 # Baca data dari CSV
 df = pd.read_csv(csv_path)
