@@ -18,3 +18,5 @@ numpy
 scikit-learn
 sounddevice
 librosa
+nltk
+bert-score
