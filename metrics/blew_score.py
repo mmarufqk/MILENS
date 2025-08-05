@@ -1,63 +1,37 @@
-from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
+import os
+import pandas as pd
 import numpy as np
+from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
-# Daftar Ref dan Fixed dari data kamu
-refs = [
-    "Esplen is part of Pittsburgh and is in the Pittsburgh City School district.",
-    "Safronov is the nearest rural locality.",
-    "Weather forecasting is another critical aspect of sailing yacht management.",
-    "The group then sing the bridge, and end the song repeating the chorus twice.",
-    "Typically it encloses a metal grommet for reinforcement and to reduce wear.",
-    "The department is, historically, a prominent producer of gold, silver, and copper.",
-    "According to an old account, there was an important exception to the rule.",
-    "One skeleton dances part of the Charleston.",
-    "The ghettoization was completed within a week.",
-    "He then started to study Business administration but broke off after a few semesters.",
-    "Then you're not the man.",
-    "The local baseball field is named for him.",
-    "These circuits are very frequently fed from transformers, and have significant resistance.",
-    "He won his first career race at New Hampshire and finished eighth in points.",
-    "She is married to Mathieu Sweeney.",
-    "“These others,” he said in a voice of extreme irritation.",
-    "He is quickly killed by Superboy-Prime amidst the chaos.",
-    "He attended Iowa State University, where he played defense on the school's football team.",
-    "Many highly successful television series have been known as period pieces.",
-    "Lenny Hart was also the Grateful Dead's original money manager.",
-]
+# Path ke file CSV hasil transkripsi
+BASE_DIR = os.path.dirname(__file__)
+csv_path = os.path.join(BASE_DIR, "../output/commonvoice_result_whisper-llama.csv")
 
-fixeds = [
-    "Aspirin is part of Pittsburgh and is in the Pittsburgh City School District.",
-    "Saffron of is the nearest rural locality.",
-    "weather forecasting is another critical aspect of sailing yacht management",
-    "The group then saw the bridge and ended the song repeating the chorus twice.",
-    "Typically, it encloses a metal grommets for reinforcement and to reduce wear.",
-    "The department is historically a prominent producer of gold, silver, and copper.",
-    "According to an old account there was an important exception to the rule.",
-    "Once collected thus is part of the Charleston.",
-    "The garage station was completed within a week.",
-    "He then started to study business administration, but broke off after a few semesters.",
-    "Then you're not the man.",
-    "the local baseball field is named for him",
-    "They are so cute are very frequently fed from transformers and acid navy contrast these days.",
-    "He won his first career was at New Hampshire and finished eighth in points.",
-    "She is married to Matthew Sweep.",
-    "these others he said in a voice of extreme irritation",
-    "He is quickly killed by superboy prime amidst the chaos.",
-    "He attended Iowa State University where he played defense on the school's football team.",
-    "Many highly successful TV series have been known as period pieces.",
-    "lenny hart was also the grateful dead's original money manager",
-]
+# Baca data dari CSV
+df = pd.read_csv(csv_path)
 
-# Menghitung BLEU score untuk setiap pasangan
+# Pastikan kolom yang dibutuhkan ada
+if "Reference" not in df.columns or "Fixed Prediction" not in df.columns:
+    raise ValueError("Kolom 'Reference' dan/atau 'Fixed Prediction' tidak ditemukan dalam file CSV.")
+
+# Hapus baris yang kosong di kolom Reference atau Fixed Prediction
+df = df.dropna(subset=["Reference", "Fixed Prediction"])
+
+# Optional: Filter hanya kalimat yang panjangnya >= 3 kata
+df = df[df["Reference"].str.split().str.len() >= 3]
+
+# Inisialisasi BLEU score
 smoothie = SmoothingFunction().method4
 scores = []
 
-for ref, pred in zip(refs, fixeds):
-    ref_tokens = ref.lower().split()
-    pred_tokens = pred.lower().split()
+# Hitung BLEU score untuk setiap pasangan kalimat
+for _, row in df.iterrows():
+    ref_tokens = row["Reference"].lower().split()
+    pred_tokens = row["Fixed Prediction"].lower().split()
+
     score = sentence_bleu([ref_tokens], pred_tokens, smoothing_function=smoothie)
     scores.append(score)
 
-# Menampilkan hasil
+# Hitung rata-rata BLEU
 average_bleu = np.mean(scores)
 print(f"Rata-rata BLEU Score: {average_bleu:.4f}")
