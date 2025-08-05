@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
-# Path ke file CSV hasil transkripsi
+# Path ke file CSV hasil transkripsiiiis
 BASE_DIR = os.path.dirname(__file__)
 csv_path = os.path.join(BASE_DIR, "../output/commonvoice_results_vosk-phi.csv")
 
